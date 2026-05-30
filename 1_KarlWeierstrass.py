@@ -1,34 +1,19 @@
 """
+Ako diferenciraš beskonačnu sumu kosinusnih funkcija i pogledaš koeficijente ispred kosinusa, 
+videćeš da njihova suma ne konvergira, a kad nema konvergencije, nema ni diferencijabilnosti.
 
-MATHEMATICAL MYSTERIES
-The Curve That Has No Tangent Anywhere
-In 1872, Karl Weierstrass produced a curve that is unbroken everywhere and has a tangent nowhere
-
-His function was continuous everywhere. It had no gaps, no jumps, no breaks.
-And yet it had no tangent anywhere. Not at one bad point. Not at a few sharp corners. Nowhere.
-That was the shock.
-
-https://medium.com/@vplevris/the-curve-that-has-no-tangent-anywhere-272e99cc7945
-
-
-If you differentiate the infinite sum of cosine functions and look at the coefficients in front of the cosines you will find out that the sum of them is not converging, and no convergence means no differentiability.
-
-Ako diferenciraš beskonačnu sumu kosinusnih funkcija i pogledaš koeficijente ispred kosinusa, videćeš da njihova suma ne konvergira, a kad nema konvergencije, nema ni diferencijabilnosti.
-
-Za našu krivu f(t) = lex-indeks to praktično znači:
-
-Nema lokalne predvidljivosti smera — diferenciranje (kod nas: inkrementi dX = f(t+1) - f(t)) ne daje stabilan "izvod". Drugim rečima, ne postoji broj koji opisuje "trenutnu brzinu" krive; ona u svakom koraku skoči i levo i desno za milione.
-Naši rezultati to potvrđuju: Higuchi FD ≈ 1.9988 (skoro maksimalno hrapavo), varijansa scaling slope ≈ 0.0018 (Brown referenca = 1), inkrementi nisu normalni. Sve to kaže da kriva pripada Weierstrass-tipu — neprekidna ali bez prave tangente.
+Za krivu f(t) = lex-indeks to praktično znači:
+Nema lokalne predvidljivosti smera — diferenciranje (ovde: inkrementi dX = f(t+1) - f(t)) ne daje stabilan "izvod". 
+Drugim rečima, ne postoji broj koji opisuje "trenutnu brzinu" krive; ona u svakom koraku skoči i levo i desno za milione.
+Moji rezultati to potvrđuju: Higuchi FD ≈ 1.9988 (skoro maksimalno hrapavo), varijansa scaling slope ≈ 0.0018 (Brown referenca = 1), inkrementi nisu normalni. 
+Sve to kaže da kriva pripada Weierstrass-tipu — neprekidna ali bez prave tangente.
 Zato i nije moguće iz jednog poteza pogoditi tačan sledeći lex-indeks; "izvod" ne postoji.
-Ono što ipak postoji je globalna struktura: Hurst ≈ 0.59 (slaba perzistentnost), lag-1 ACF/MI nad inkrementima ≈ 0.5 (jedan korak unazad nosi informaciju), rolling H/FD memorija. To koriste naši NEXT modeli — ne kao izvod, nego kao slabe statističke "ručke" oko kojih grade region kandidata, ne jednu tačku.
-Ukratko: kriva je "fraktalno-Brownova" po prirodi, lokalno nepredvidljiva (kao Weierstrass), globalno blago perzistentna — i to je upravo prozor kroz koji predikcije iz koraka 3 imaju ikakvog smisla.
-
-ne tražimo "tangentnu formulu" za sledeći broj, nego male statističke tragove u inače veoma hrapavoj krivi.
-
-Ne predviđamo glatku krivu. Lovimo ponavljajuće tragove u hrapavoj krivi.
-
-
-
+Ono što ipak postoji je globalna struktura: Hurst ≈ 0.59 (slaba perzistentnost), lag-1 ACF/MI nad inkrementima ≈ 0.5 (jedan korak unazad nosi informaciju), rolling H/FD memorija. 
+To koriste sledeci NEXT modeli — ne kao izvod, nego kao slabe statističke "ručke" oko kojih grade region kandidata, ne jednu tačku.
+Ukratko: kriva je "fraktalno-Brownova" po prirodi, lokalno nepredvidljiva (kao Weierstrass), 
+globalno blago perzistentna — i to je upravo prozor kroz koji predikcije imaju ikakvog smisla.
+Ne tražim "tangentnu formulu" za sledeći broj, nego male statističke tragove u inače veoma hrapavoj krivi.
+Ne predviđam glatku krivu. Lovim ponavljajuće tragove u hrapavoj krivi.
 
 
 
@@ -41,78 +26,60 @@ KarlWeierstrass algorithm for Loto 7/39 prediction
     b) Hurst eksponent (R/S analiza)   
     c) Fraktalna dimenzija.      
 
-3. nad svakim aparatom svaki test  
+3. Nad svakim aparatom svaki Test  
     a) Hurst eksponent.    
     b) Autokorelacija (ACF).   
     c) Mutual information.   
     d) Sample / permutation entropy.   
     e) NIST baterija testova nasumičnosti.          
 
-Strukturu testiramo nad niz 4624 lex-indeksa (iz skalar 1..15.380.937).      
-kad sve to uradis onda cemo izvrsiti analizu rezultata i izabrati sta je najbolje za predikciju sledece loto kombinacije
+Strukturu testiram nad niz 4624 lex-indeksa (iz skalar 1..15.380.937).      
+Kasnije izvrsiti analizu rezultata i izabrati sta je najbolje za predikciju sledece loto kombinacije
 
 
-
-
-koncept ovako:
-
+Koncept:
 Niz nije 7 kolona nego jedan skalarni niz: svaka Loto 7/39 kombinacija se mapira u lex-indeks 1..C(39,7).
-Nad tim nizom od 4624 lex-indeksa posmatramo "Weierstrass/fraktalnu" krivu: možda nema tangente, ali možda ima skrivenu strukturu.
+Nad tim nizom od 4624 lex-indeksa posmatram "Weierstrass/fraktalnu" krivu: 
+možda nema tangente, ali možda ima skrivenu strukturu.
 Cilj nije odmah predikcija, nego prvo analiza: da li postoji prediktivna struktura.
 Aparati: Brownovo kretanje, Hurst/R-S, fraktalna dimenzija.
 Testovi: Hurst, ACF, mutual information, sample/permutation entropy, NIST randomness.
-Tek posle rezultata biramo šta može da se koristi za predikciju sledeće kombinacije.
 
 
-
-
-Koristimo:
-
-Izvučene kombinacije: loto7_4624_k43.csv (bez headera) ili loto7hh_4624_k43.csv (sa headerom)
-Ceo prostor kombinacija: kombinacije_39C7.csv ili kombinacijeH_39C7.csv
+Koristim:
+Izvučene kombinacije: 4624
+Ceo prostor kombinacija: 39C7 (15.380.937 kombinacija)
 Svaka izvučena kombinacija se mapira na tačan red/indeks u 39C7 prostoru.
-Dobijamo niz od 4624 lex-indeksa: to su stvarne 4624 tačke Karlove krive.
-Ne radimo krivu od svih 15.380.937 tačaka, nego krivu od 4624 stvarno posećene tačke, gde je svaka tačka njen indeks u ukupnom prostoru.
-Dakle f(t) je: t = redni broj izvlačenja 1..4624 f(t) = indeks te kombinacije u kombinacije_39C7.csv
-
+Dobijam niz od 4624 lex-indeksa: to su stvarne 4624 tačke Weierstrass-ove krive.
+Ne radim krivu od svih 15.380.937 tačaka, nego krivu od 4624 stvarno posećene tačke, 
+gde je svaka tačka njen indeks u ukupnom prostoru.
+Dakle f(t) je: t = redni broj izvlačenja 1..4624 f(t) = indeks te kombinacije u 39C7.
 To je osnova za Brown/Hurst/fraktal/NIST analizu.
-
-
-
-
-učitavanje, lex-rank mapiranje, Weierstrass/Brown/Hurst/fraktal aparate, testove i TXT/PNG izlaz.
-
-
+Učitavanje, lex-rank mapiranje, Weierstrass/Brown/Hurst/fraktal aparate, testove i TXT/PNG izlaz.
 
 Skripta radi:
-
 učita loto7_4624_k43.csv
 svaku kombinaciju mapira u tačan lex-indeks iz prostora C(39,7)
 formira krivu f(t)
 računa aparate/testove: Brown inkrementi, Hurst R/S, ACF, mutual information, sample entropy, permutation entropy, Higuchi/Katz fraktalna dimenzija, NIST indikatori
 snima 1_KarlWeierstrass.txt
 snima 1_KarlWeierstrass.png
+Funkcija je u kodu lex_idx (NumPy niz od 4624 vrednosti), f(t) = lex_idx[t-1]. 
+Nacrtana je u trenutnom PNG-u kao mali panel gore-levo, ali je tu zbijena. 
+Zaseban full-width PNG samo za krivu 1_KarlWeierstrass_v2_1.png (full-width 16×5) sa svih 4624 tačaka.
 
-
-
-
-Funkcija je u kodu lex_idx (NumPy niz od 4624 vrednosti), f(t) = lex_idx[t-1]. Nacrtana je u trenutnom PNG-u kao mali panel gore-levo, ali je tu zbijena. Dodajem zaseban full-width PNG samo za nju.
-
-
-dobićeš novu 1_KarlWeierstrass_kriva.png (full-width 16×5) sa svih 4624 tačaka.
-
-Kratka analiza prvih rezultata iz tvog TXT-a:
-
+Kratka analiza prvih rezultata:
 Hurst H = 0.593 → blago iznad 0.5, ima slabu perzistenciju (dugoročnu pozitivnu zavisnost), nije čist random walk.
-ACF max = 0.029 na lag 21 → ispod našeg praga 0.08, linearna memorija je slaba.
+ACF max = 0.029 na lag 21 → ispod praga 0.08, linearna memorija je slaba.
 Mutual information lag 1 = 0.023, lag 7 = 0.023 → ispod praga 0.05, ni nelinearno nije jako.
 Sample entropy = 2.24, permutation entropy = 0.99997 → suštinski maksimalno haotično.
 NIST testovi (monobit, runs, block_freq, cusum, approx_entropy): svi p > 0.01 — ne odbacuju random hipotezu.
 Inkrementi (Δf): očekivano anti-perzistentni (ACF lag1 = -0.50) jer differencing samo po sebi ubacuje anti-korelaciju, to nije signal o pravoj strukturi.
-Zaključak: jedini blagi indikator je Hurst > 0.5 (perzistencija). Ostalo izgleda kao čisto random. Pre nego što kreneš ka modelu, ima smisla proveriti da li je taj Hurst stabilan (npr. testirati na pomeranjima prozora i na permutovanoj seriji za poređenje) — inače može da bude artefakt lex-numerisanja.
-
-
+Zaključak: jedini blagi indikator je Hurst > 0.5 (perzistencija). 
+Ostalo izgleda kao čisto random. 
+Ima smisla proveriti da li je taj Hurst stabilan (npr. testirati na pomeranjima prozora i na permutovanoj seriji za poređenje) — inače može da bude artefakt lex-numerisanja.
 """
+
 
 import csv
 import math
@@ -128,8 +95,8 @@ from scipy import stats
 
 T0 = time.time()
 
-CSV_DRAWS = "/Users/4c/Desktop/GHQ/data/loto7_4624_k43.csv"
-CSV_ALL_COMBOS = "/Users/4c/Desktop/GHQ/data/kombinacije_39C7.csv"
+CSV_DRAWS = "/data/loto7_4624_k43.csv"
+CSV_ALL_COMBOS = "/data/kombinacije_39C7.csv"
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TXT_PATH = os.path.join(HERE, "1_KarlWeierstrass.txt")
@@ -499,7 +466,7 @@ for r in results:
           f"{r['higuchi_fd']:>8.3f}  {status_from_results(r)}")
 print()
 
-# Standalone Karlova kriva — svih 4624 tacaka, full width radi citljivosti.
+# Standalone KarlWeierstrass kriva — svih 4624 tacaka, full width radi citljivosti.
 KRIVA_PNG = os.path.join(HERE, "1_KarlWeierstrass_kriva.png")
 fig_curve, ax_curve = plt.subplots(figsize=(16, 5))
 ax_curve.plot(t, lex_idx, linewidth=0.6, color="steelblue")
@@ -626,10 +593,7 @@ print(f"Ukupno vreme: {timedelta(seconds=int(elapsed))} ({elapsed:.1f} s)")
 print()
 
 
-
-
 """
-
 KarlWeierstrass / lex-indeks analiza Loto 7/39
 ============================================================
 CSV izvucenih kombinacija: /data/loto7_4624_k43.csv
