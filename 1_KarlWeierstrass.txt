@@ -1,0 +1,44 @@
+KarlWeierstrass algorithm for Loto 7/39 prediction
+======================================================================
+
+Ulaz:
+  Izvucene kombinacije: /data/loto7_4624_k43.csv
+  Ukupan prostor 39C7:  /data/kombinacije_39C7.csv
+  Ucitano izvucenja:    4624
+  C(39,7):              15380937
+  PNG (multi-panel):    /1_KarlWeierstrass.png
+  PNG (kriva 4624 tac.):/1_KarlWeierstrass_kriva.png
+
+Mapiranje:
+  f(t) = lex-indeks izvucene kombinacije u skupu svih 39C7 kombinacija
+  Prvih 10 tacaka krive:
+    t=1    combo=(5, 14, 15, 17, 28, 30, 34)  lex=9774196
+    t=2    combo=(2, 3, 13, 18, 19, 23, 37)  lex=3064646
+    t=3    combo=(13, 17, 18, 20, 21, 26, 39)  lex=14623405
+    t=4    combo=(17, 20, 23, 26, 35, 36, 38)  lex=15178170
+    t=5    combo=(3, 4, 8, 11, 29, 32, 37)  lex=5219568
+    t=6    combo=(6, 7, 16, 24, 34, 38, 39)  lex=10167673
+    t=7    combo=(2, 3, 7, 8, 20, 23, 26)  lex=2903730
+    t=8    combo=(5, 9, 12, 28, 32, 36, 38)  lex=9326447
+    t=9    combo=(1, 5, 19, 24, 26, 30, 34)  lex=1398581
+    t=10   combo=(2, 12, 16, 20, 26, 28, 36)  lex=4751586
+
+Rezultati testova po aparatu:
+aparat	n	hurst_rs	acf_max_abs_lag1_40	acf_lag_at_max	acf_lag1	mutual_info_lag1	mutual_info_lag7	sample_entropy	permutation_entropy_norm	higuchi_fd	katz_fd	nist_monobit	nist_runs	nist_block_freq	nist_cusum	nist_approx_entropy	signal
+Weierstrass lex kriva f(t)	4624	0.593060	0.028563	21	0.011584	0.023038	0.023335	2.237303	0.999997	1.000494	13.056413	1.000000	0.377586	0.347260	0.263718	0.018835	H>0.57 perzistentno
+Brownovo kretanje: kumulativni dx	4623	0.590727	0.028702	21	0.011685	0.023039	0.023340	2.237303	0.999997	1.000481	9.608709	0.988266	0.385534	0.265827	0.257435	0.019369	H>0.57 perzistentno
+Brownovo kretanje: inkrementi dx	4623	0.068989	0.501893	1	-0.501893	0.180089	0.026251	2.071274	0.994830	1.028463	9.393977	0.988266	0.000000	1.000000	0.680479	0.000000	H<0.43 anti-perzistentno, ACF pik, MI signal, NIST p<0.01
+Hurst/R-S nad lex krivom	4624	0.593060	0.028563	21	0.011584	0.023038	0.023335	2.237303	0.999997	1.000494	13.056413	1.000000	0.377586	0.347260	0.263718	0.018835	H>0.57 perzistentno
+Fraktalna dimenzija nad lex krivom	4624	0.593060	0.028563	21	0.011584	0.023038	0.023335	2.237303	0.999997	1.000494	13.056413	1.000000	0.377586	0.347260	0.263718	0.018835	H>0.57 perzistentno
+
+Tumacenje pragova (radno, za izbor narednog modela):
+  Hurst ~0.5: blizu random walk; >0.57 perzistentno; <0.43 anti-perzistentno.
+  ACFmax >0.08: moguci linearni memorijski signal u lagovima 1..40.
+  Mutual information >0.05: moguci nelinearni signal.
+  Permutation entropy <0.95: redosled nije maksimalno haotican.
+  NIST p<0.01: taj test odbacuje jednostavnu random hipotezu za binarizovani niz.
+
+Napomena:
+  Ovo NIJE predikcija. Ovo je analiza da li uopste postoji struktura za predikciju.
+
+Ukupno vreme: 0:00:28 (28.3 s)
