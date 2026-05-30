@@ -16,7 +16,6 @@ Ne tražim "tangentnu formulu" za sledeći broj, nego male statističke tragove 
 Ne predviđam glatku krivu. Lovim ponavljajuće tragove u hrapavoj krivi.
 
 
-
 KarlWeierstrass algorithm for Loto 7/39 prediction
 
 1. Weierstrass-ova funkcija nad svih 4624 do sad izvucenih kombinacija.       
